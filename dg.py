@@ -40,13 +40,24 @@ ll = 25
 rl = 31
 d = zero([T,3])
 
+#compute first oMi for right foot
+
+q = qs[0,:].T
+se3.forwardKinematics(robot.model,robot.data,q)
+oMr0 = robot.data.oMi[rl].copy()
+
+#print q.T,oMr0
+#print '='*50
 for i,q in enumerate(qs):
+    #FF = qs[i,:7]
     q = q.T
     #robot.display(q); time.sleep(1e-3)
     se3.forwardKinematics(robot.model,robot.data,q)
-    oMl = robot.data.oMi[ll]
+    #oMl = robot.data.oMi[ll]
     oMr = robot.data.oMi[rl]
-    rMl = oMr.inverse()*oMl
-    d[i,:] = rMl.translation.T
-
-np.savetxt('/home/datchuth/Dev/matlab/extractFromBags/bagfiles/HRP2/testPattern/test_pattern_stepping0_rfoot.txt',d)
+    r0Mr = oMr0.inverse()*oMr
+    d[i,:] = r0Mr.translation.T
+    #print d[i,:],q.T,oMr0,oMr
+    #if i>10: break    
+    
+np.savetxt('/home/datchuth/Dev/matlab/extractFromBags/bagfiles/HRP2/testPattern/test_pattern_stepping0_rfoot2.txt',d)
